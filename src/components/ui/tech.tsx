@@ -44,6 +44,8 @@ export default function TechnologySection() {
 
         <div className="w-full md:w-1/2">
           <Image
+          width={1000}
+          height={1000}
             src="/skills.png"
             alt="Technology Illustration"
             className="w-full max-w-lg mx-auto"
