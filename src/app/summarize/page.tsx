@@ -7,12 +7,10 @@ import { useChat } from "ai/react";
 import {
   ArrowRight,
   ArrowUpRight,
-  Github,
   Loader2,
   Youtube,
   Languages,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -28,7 +26,6 @@ export default function Home() {
   const {
     messages,
     input,
-    handleInputChange: handleChatInputChange,
     handleSubmit: handleChatSubmit,
     setMessages,
     setInput,

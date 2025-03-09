@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 export default function TechnologySection() {
   const technologies = [
     { name: "React", percentage: 100 },
@@ -17,8 +19,9 @@ export default function TechnologySection() {
             Technology to Build this Tool
           </h2>
           <p className="mt-3 text-gray-600">
-            To build YouTube summaries, the following technologies are used with Google's YouTube API and Gemini API.
-          </p>
+  To build YouTube summaries, the following technologies are used with Google&apos;s YouTube API and Gemini API.
+</p>
+
 
 
           <div className="mt-6 space-y-4">
@@ -40,7 +43,7 @@ export default function TechnologySection() {
         </div>
 
         <div className="w-full md:w-1/2">
-          <img
+          <Image
             src="/skills.png"
             alt="Technology Illustration"
             className="w-full max-w-lg mx-auto"
