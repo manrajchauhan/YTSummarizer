@@ -53,9 +53,6 @@ export default function SummarizerAPP() {
 
       const url = formData.get("url") as string;
 
-      if (!isValidYouTubeUrl(url))
-        throw new Error("Please enter a valid YouTube URL");
-
       const fetchResult = await fetch(`/api/website?url=${url}`);
       console.log(fetchResult);
 
@@ -111,7 +108,7 @@ export default function SummarizerAPP() {
         </div>
 
         <div className="bg-gradient-to-b from-background to-muted ">
-      <main className="container mx-auto px-4 py-4 md:py-8 mt-[-250]">
+      <main className="container mx-auto px-4 py-4 md:py-8 mt-[-250px]">
         <div className="flex flex-col gap-4 md:gap-4 max-w-7xl mx-auto">
           {!videoData ? (
             <div className="flex flex-col items-center justify-center mt-10">
@@ -132,9 +129,8 @@ export default function SummarizerAPP() {
                         type="url"
                         name="url"
                         id="youtube-url"
-                        placeholder="https://youtube.com/watch?v=..."
+                        placeholder="Enter Website URL..."
                         required
-                        aria-label="YouTube video URL"
                         autoComplete="off"
                         spellCheck="false"
                         className="flex flex-col px-7 py-8 w-full bg-white rounded-[14px] overflow-visible max-md:p-5 max-sm:p-4 md:max-w-[600px]"
@@ -184,7 +180,7 @@ export default function SummarizerAPP() {
                         <Input
                           type="url"
                           name="url"
-                          placeholder="Enter new YouTube URL..."
+                          placeholder="Enter Website URL..."
                           required
                           className="flex flex-col px-7 py-8 w-full bg-white rounded-[14px] overflow-visible max-md:p-5 max-sm:p-4 md:max-w-[600px] "
                           disabled={isPending}
@@ -218,53 +214,11 @@ export default function SummarizerAPP() {
 
           {videoData && (
             <div className="mt-20">
-     <div className="px-4 py-2 sm:px-6 sm:py-4 flex flex-col justify-center h-full sm:h-auto">
-     <span className="flex items-center gap-1 sm:gap-2">
-       <Youtube className="h-4 w-4 sm:h-8 sm:w-8 text-primary" />{" "}
-       <Link
-         href={`https://www.youtube.com/watch?v=${videoData.videoId}`}
-         target="_blank"
-         rel="noreferrer"
-         className="font-semibold text-md line-clamp-2  sm:text-lg overflow-hidden text-ellipsis w-[calc(100vw-6rem)] whitespace-nowrap bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent hover:opacity-80 transition-opacity"
-       >
-         {videoData.title}
-       </Link>
-     </span>
-     <a
-       href={videoData.authorUrl}
-       rel="noreferrer"
-       target="_blank"
-       className="text-xs sm:text-sm text-muted-foreground hover:text-primary inline-flex items-center gap-1 mt-2 group"
-     >
-       {videoData.authorName}
-       <ArrowUpRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
-     </a>
-   </div>
-   <div className="grid lg:grid-cols-2 gap-2 sm:gap-4 md:gap-6 w-full h-[calc(100vh-7rem)] sm:h-[calc(100vh-14rem)] mt-[2rem] sm:mt-0">
-              <div className="animate-in fade-in-0 duration-300">
-                <CardContent className="p-0 hidden sm:block">
-                  <div className="aspect-video bg-black ">
-                    <iframe
-                      title="YouTube video player"
-                      width="100%"
-                      height="100%"
-                      src={`https://www.youtube.com/embed/${videoData.videoId}`}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      loading="lazy"
-                    />
-                  </div>
-                </CardContent>
-                <div className="mt-10">
-                 <h1>Relevant Video</h1>
-
-                    </div>
-              </div>
-
-              <Card className="animate-in fade-in-0 duration-300 h-[calc(100vh-14rem)]">
+   <div className="grid gap-2 sm:gap-4 md:gap-6 w-full h-[calc(100vh-7rem)] sm:h-[calc(100vh-14rem)] mt-[2rem] sm:mt-0">
+              <Card className="animate-in fade-in-0 duration-300 h-[calc(100vh-14rem)] rounded-xl">
                 <CardHeader className="px-4 py-2 pt-4 sm:px-6 sm:py-4">
                   <CardTitle className="text-base sm:text-lg">
-                    Summary
+                    Website Summary
                   </CardTitle>
                   <p className="text-sm text-muted-foreground">
                     Ask follow-up questions to learn more.

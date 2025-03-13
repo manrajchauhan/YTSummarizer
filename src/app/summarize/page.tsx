@@ -94,7 +94,7 @@ export default function Home() {
     <Header/>
     <HEROYT/>
     <div className="bg-gradient-to-b from-background to-muted ">
-      <main className="container mx-auto px-4 py-4 md:py-8 mt-[-200]">
+      <main className="container mx-auto px-4 py-4 md:py-8 mt-[-200px]">
         <div className="flex flex-col gap-4 md:gap-4 max-w-7xl mx-auto">
           {!videoData ? (
             <div className="flex flex-col items-center justify-center ">
