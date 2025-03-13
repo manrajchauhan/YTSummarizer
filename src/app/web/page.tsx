@@ -1,8 +1,11 @@
 "use client";
 import Footer from '@/components/ui/footer'
 import Header from '@/components/ui/header'
-import React from "react";
+import React, { useRef } from "react";
 import ReactMarkdown from "react-markdown";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import { Download } from "lucide-react";
 
 import { useChat } from "ai/react";
 import {
@@ -29,6 +32,7 @@ export default function SummarizerAPP() {
   } = useChat({api: "/api/web-chat"});
   const [isPending, setIsPending] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const pdfRef = useRef<HTMLDivElement>(null);
   const [videoData, setVideoData] = React.useState<GetVideoDataResponse | null>(
     null,
   );
@@ -79,6 +83,19 @@ export default function SummarizerAPP() {
   }
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setInput(e.target.value);
+  };
+
+  const exportToPDF = async () => {
+    if (!pdfRef.current) return;
+
+    const canvas = await html2canvas(pdfRef.current);
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    pdf.addImage(imgData, "PNG", 10, 10, pdfWidth - 20, pdfHeight);
+    pdf.save("summary.pdf");
   };
 
   return (
@@ -220,7 +237,7 @@ export default function SummarizerAPP() {
                     Ask follow-up questions to learn more.
                   </p>
                 </CardHeader>
-                <CardContent className="relative h-[calc(100%-5rem)] px-4 py-2 sm:px-6 sm:py-4">
+                <CardContent className="relative h-[calc(100%-5rem)] px-4 py-2 sm:px-6 sm:py-4" ref={pdfRef}>
                   <div
                     className={`flex flex-col space-y-4 h-[calc(100%-4rem)] ${
                       !isLoading ? "overflow-y-auto" : "overflow-hidden"
@@ -282,6 +299,14 @@ export default function SummarizerAPP() {
                     </div>
                   </form>
                 </CardContent>
+                <div className="flex justify-between p-4">
+  {/* Export to PDF Button */}
+  <Button onClick={exportToPDF} className="bg-gray-600 text-white flex items-center">
+    <Download className="h-4 w-4 mr-2" />
+    Export as PDF
+  </Button>
+</div>
+
               </Card>
 </div>
             </div>
