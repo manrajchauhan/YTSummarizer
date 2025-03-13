@@ -200,7 +200,7 @@ export default function Home() {
           )}
 
           {videoData && (
-            <div className="">
+            <div className="mt-10">
      <div className="px-4 py-2 sm:px-6 sm:py-4 flex flex-col justify-center h-full sm:h-auto">
      <span className="flex items-center gap-1 sm:gap-2">
        <Youtube className="h-4 w-4 sm:h-8 sm:w-8 text-primary" />{" "}

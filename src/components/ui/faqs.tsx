@@ -7,22 +7,22 @@ const faqs = [
   {
     question: "Is there a free trial available?",
     answer:
-      "Yes, we have a free version of AI Summarizer available for you to try out! It's a powerful tool that allows you to generate AI-based video summaries with ease.",
+      "Yes, we offer a free version of our summarization tool for you to try. It allows you to generate AI-powered summaries for web content and YouTube videos effortlessly.",
   },
   {
-    question: "What does the free version include?",
+    question: "What features are included in the free version?",
     answer:
-      "The free version includes AI-generated summaries for YouTube videos, basic transcription services, and limited access to premium features.",
+      "The free version includes AI-generated summaries for YouTube videos, web articles, and basic transcription services with limited access to advanced features.",
   },
   {
-    question: "Do you have an affiliate program?",
+    question: "Is there an affiliate program?",
     answer:
-      "Yes! You can join our affiliate program to earn rewards for sharing AI Summarizer with others.",
+      "Yes! Join our affiliate program and earn rewards by sharing our AI summarizer with others.",
   },
   {
-    question: "Do I need to know how to use AI to use AI Summarizer?",
+    question: "Do I need technical knowledge to use this tool?",
     answer:
-      "No, AI Summarizer is designed to be user-friendly and requires no technical expertise. Simply paste a video link, and our AI will generate a summary for you.",
+      "Not at all! Our summarization tool is designed for everyone. Just enter a website URL or a YouTube video link, and our AI will generate a summary for you.",
   },
 ];
 
@@ -32,19 +32,18 @@ export default function Faqs() {
   return (
     <section className="max-w-7xl mx-auto px-6 py-12 md:py-20">
       <div className="grid md:grid-cols-2 gap-10">
-
         <div>
           <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">
-            General FAQs
+            Frequently Asked Questions
           </h2>
           <p className="mt-4 text-gray-600 text-lg leading-relaxed">
-            Everything you need to know about the product and how it works. Can’t find an answer?{" "}
+            Find answers to common questions about our AI-powered summarization tool. Still have
+            questions?{" "}
             <a href="/about" className="text-black font-semibold underline">
-             About Us
+              Learn more about us
             </a>
           </p>
         </div>
-
 
         <div className="space-y-4">
           {faqs.map((faq, index) => (
@@ -53,9 +52,7 @@ export default function Faqs() {
                 onClick={() => setOpenFaq(openFaq === index ? null : index)}
                 className="w-full flex justify-between items-center py-4 text-left"
               >
-                <span className="text-lg font-semibold text-gray-900">
-                  {faq.question}
-                </span>
+                <span className="text-lg font-semibold text-gray-900">{faq.question}</span>
                 {openFaq === index ? (
                   <Minus className="w-5 h-5 text-gray-500" />
                 ) : (

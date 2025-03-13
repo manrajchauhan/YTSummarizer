@@ -49,7 +49,6 @@ export default function SummarizerAPP() {
   }, [messages]);
 
   React.useEffect(() => {
-    setMessages([]);
     setVideoData(null);
     setError(null);
     window.speechSynthesis.cancel();
@@ -111,20 +110,16 @@ export default function SummarizerAPP() {
       const response = await fetch(fontUrl);
       const fontBuffer = await response.arrayBuffer();
 
-      // Convert the font to Base64
       const fontBase64 = btoa(
         new Uint8Array(fontBuffer).reduce((data, byte) => data + String.fromCharCode(byte), "")
       );
 
-      // Add font to jsPDF
       pdf.addFileToVFS("NotoSansDevanagari-Regular.ttf", fontBase64);
       pdf.addFont("NotoSansDevanagari-Regular.ttf", "NotoSans", "normal");
 
-      // Detect Hindi text
       const isHindi = messages.some((m) => /[\u0900-\u097F]/.test(m.content));
       pdf.setFont(isHindi ? "NotoSans" : "helvetica", "normal");
 
-      // Set title dynamically
       const title = isHindi ? "वेबसाइट सारांश" : "Website Summary";
       pdf.setFontSize(16);
       pdf.text(title, marginLeft, yPosition);
