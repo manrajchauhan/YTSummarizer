@@ -105,26 +105,49 @@ export default function SummarizerAPP() {
     const maxWidth = 180;
     let yPosition = marginTop;
 
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(16);
-    pdf.text("Website Summary", marginLeft, yPosition);
-    yPosition += 10;
+    try {
 
-    pdf.setFont("helvetica", "normal");
-    pdf.setFontSize(12);
+    const fontUrl = "/fonts/NotoSansDevanagari-Regular.ttf";
+      const response = await fetch(fontUrl);
+      const fontBuffer = await response.arrayBuffer();
 
-    messages
-      .slice(1)
-      .filter((m) => m.role !== "user")
-      .forEach((m, index) => {
-        const text = `Response ${index + 1}:\n${m.content}`;
-        const splitText = pdf.splitTextToSize(text, maxWidth);
-        pdf.text(splitText, marginLeft, yPosition, { maxWidth });
-        yPosition += splitText.length * 6 + 4;
-      });
+      // Convert the font to Base64
+      const fontBase64 = btoa(
+        new Uint8Array(fontBuffer).reduce((data, byte) => data + String.fromCharCode(byte), "")
+      );
 
-    pdf.save("web-summary.pdf");
+      // Add font to jsPDF
+      pdf.addFileToVFS("NotoSansDevanagari-Regular.ttf", fontBase64);
+      pdf.addFont("NotoSansDevanagari-Regular.ttf", "NotoSans", "normal");
+
+      // Detect Hindi text
+      const isHindi = messages.some((m) => /[\u0900-\u097F]/.test(m.content));
+      pdf.setFont(isHindi ? "NotoSans" : "helvetica", "normal");
+
+      // Set title dynamically
+      const title = isHindi ? "वेबसाइट सारांश" : "Website Summary";
+      pdf.setFontSize(16);
+      pdf.text(title, marginLeft, yPosition);
+      yPosition += 10;
+
+      pdf.setFontSize(12);
+
+      messages
+        .slice(1)
+        .filter((m) => m.role !== "user")
+        .forEach((m, index) => {
+          const text = isHindi ? `उत्तर ${index + 1}:\n${m.content}` : `Response ${index + 1}:\n${m.content}`;
+          const splitText = pdf.splitTextToSize(text, maxWidth);
+          pdf.text(splitText, marginLeft, yPosition, { maxWidth });
+          yPosition += splitText.length * 6 + 4;
+        });
+
+      pdf.save("web-summary.pdf");
+    } catch (error) {
+      console.error("Error loading font:", error);
+    }
   };
+
 
 
 
@@ -152,7 +175,6 @@ export default function SummarizerAPP() {
     setIsSpeaking(false);
     speechInstance.current = null;
   };
-
 
   return (
     <>
