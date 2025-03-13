@@ -9,26 +9,6 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
   const pathname = usePathname();
-  const [isSettingsModalOpen, setSettingsModalOpen] = useState(false);
-  const [authToken, setAuthToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    setAuthToken(token);
-    setLoading(false);
-  }, []);
-
-      const toggleSettingsModal = () => {
-        setSettingsModalOpen(!isSettingsModalOpen);
-      };
-
-    const userIcon = {
-      href: "#",
-      imgSrc: "/icon/user-demo.svg",
-      alt: "User",
-    };
-
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 

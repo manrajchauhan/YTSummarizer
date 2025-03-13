@@ -345,7 +345,7 @@ export default function SummarizerAPP() {
             How to Summarize Websites & Articles?
           </h2>
           <p className="text-2xl tracking-tighter text-gray-600 mb-12 max-w-2xl mx-auto">
-            Quickly extract key insights from web pages and articles in 3 simple steps using TubeAbstract's AI-powered summarizer.
+            {`Quickly extract key insights from web pages and articles in 3 simple steps using TubeAbstract's AI-powered summarizer.`}
           </p>
 
           <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">
@@ -360,7 +360,7 @@ export default function SummarizerAPP() {
                 step: "Step 2",
                 title: "Generate Summary",
                 description:
-                  'Click the "Generate Summary" button, and TubeAbstract will analyze and summarize the webpage content.',
+                  `Click the "Generate Summary" button, and TubeAbstract will analyze and summarize the webpage content.`,
                 icon: "⚡",
               },
               {

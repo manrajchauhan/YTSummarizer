@@ -9,8 +9,8 @@ export default function LOWERYT() {
     How to Summarize YouTube Videos?
   </h2>
   <p className="text-2xl text-gray-600 mb-12 max-w-2xl mx-auto">
-    Easily summarize YouTube videos in just 3 simple steps with TubeAbstract's AI-powered tool.
-  </p>
+  {`Easily summarize YouTube videos in just 3 simple steps with TubeAbstract's AI-powered tool.`}
+</p>
 
   <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">
     {[
@@ -24,7 +24,7 @@ export default function LOWERYT() {
         step: "Step 2",
         title: "Generate Summary",
         description:
-          'Click the "Generate Summary" button, and TubeAbstract will fetch the transcript and summarize the video.',
+          "Click the &quot;Generate Summary&quot; button, and TubeAbstract will fetch the transcript and summarize the video.",
         icon: "⚡",
       },
       {
