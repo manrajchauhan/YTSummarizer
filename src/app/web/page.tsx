@@ -7,19 +7,15 @@ import ReactMarkdown from "react-markdown";
 import { useChat } from "ai/react";
 import {
   ArrowRight,
-  ArrowUpRight,
   Loader2,
-  Youtube,
   Languages,
 } from "lucide-react";
-import Link from "next/link";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { GetVideoDataResponse } from "@/types";
-import { isValidYouTubeUrl } from "@/utils/youtube";
 
 export default function SummarizerAPP() {
   const {
