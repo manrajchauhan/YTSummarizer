@@ -4,9 +4,7 @@ import Header from '@/components/ui/header'
 import React, { useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
-import { Download } from "lucide-react";
-
+import { Download , Volume2} from "lucide-react";
 import { useChat } from "ai/react";
 import {
   ArrowRight,
@@ -20,7 +18,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { GetVideoDataResponse } from "@/types";
 
+import LOWERWEB from '@/components/ui/lower2';
+import HEROWEB from '@/components/ui/hero2';
+
 export default function SummarizerAPP() {
+
   const {
     messages,
     input,
@@ -88,38 +90,37 @@ export default function SummarizerAPP() {
   const exportToPDF = async () => {
     if (!pdfRef.current) return;
 
-    const canvas = await html2canvas(pdfRef.current);
-    const imgData = canvas.toDataURL("image/png");
     const pdf = new jsPDF("p", "mm", "a4");
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    const marginLeft = 10;
+    const marginTop = 10;
+    const maxWidth = 180;
+    const yPosition = marginTop;
 
-    pdf.addImage(imgData, "PNG", 10, 10, pdfWidth - 20, pdfHeight);
-    pdf.save("summary.pdf");
+    const content = messages.slice(1).map((m) => m.content).join("\n\n");
+
+    const splitText = pdf.splitTextToSize(content, maxWidth);
+
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(12);
+    pdf.text(splitText, marginLeft, yPosition, { maxWidth });
+
+    pdf.save("web-summary.pdf");
   };
+
+  const speakText = () => {
+    const summaryText = messages.slice(1).map((m) => m.content).join(". ");
+    if (summaryText) {
+      const speech = new SpeechSynthesisUtterance(summaryText);
+      window.speechSynthesis.speak(speech);
+    }
+  };
+
 
   return (
     <>
       <div>
         <Header />
-        <div
-          className="relative bg-cover bg-center bg-no-repeat px-4 md:px-14 pb-16"
-          style={{
-            backgroundImage: "linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.3)), url('/hero2.jpg')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          <div className="flex flex-col items-center text-center pt-40 pb-40">
-            <h1 className="text-white text-4xl md:text-8xl font-semibold tracking-tighter drop-shadow-lg">
-              Website Article Summarizer
-            </h1>
-            <p className="text-white text-2xl tracking-tighter md:text-xl mt-4 max-w-2xl drop-shadow-md">
-              Instantly summarize articles, blogs, and web pages with our AI-powered tool, helping you extract key points efficiently.
-            </p>
-          </div>
-        </div>
-
+        <HEROWEB/>
         <div className="bg-gradient-to-b from-background to-muted ">
       <main className="container mx-auto px-4 py-4 md:py-8 mt-[-250px]">
         <div className="flex flex-col gap-4 md:gap-4 max-w-7xl mx-auto">
@@ -237,8 +238,9 @@ export default function SummarizerAPP() {
                     Ask follow-up questions to learn more.
                   </p>
                 </CardHeader>
-                <CardContent className="relative h-[calc(100%-5rem)] px-4 py-2 sm:px-6 sm:py-4" ref={pdfRef}>
+                <CardContent className="relative h-[calc(100%-5rem)] px-4 py-2 sm:px-6 sm:py-4">
                   <div
+                   ref={pdfRef}
                     className={`flex flex-col space-y-4 h-[calc(100%-4rem)] ${
                       !isLoading ? "overflow-y-auto" : "overflow-hidden"
                     } px-1`}
@@ -300,12 +302,17 @@ export default function SummarizerAPP() {
                   </form>
                 </CardContent>
                 <div className="flex justify-between p-4">
-  {/* Export to PDF Button */}
-  <Button onClick={exportToPDF} className="bg-gray-600 text-white flex items-center">
-    <Download className="h-4 w-4 mr-2" />
-    Export as PDF
-  </Button>
-</div>
+
+                    <Button onClick={exportToPDF} className="bg-neutral-950 hover:bg-neutral-800 text-white flex items-center">
+                        <Download className="h-4 w-4 mr-2" />
+                        Export as PDF
+                    </Button>
+                    <Button onClick={speakText} className="bg-green-600 hover:bg-green-500 text-white flex items-center">
+                        <Volume2 className="h-4 w-4 mr-2" />
+                        Read Aloud
+                    </Button>
+                    </div>
+
 
               </Card>
 </div>
@@ -315,90 +322,7 @@ export default function SummarizerAPP() {
       </main>
     </div>
 
-    <section className="px-6 md:px-20 py-16 bg-gray-100 text-center">
-          <h2 className="text-3xl md:text-8xl font-bold tracking-tighter text-gray-800 mb-8">
-            How to Summarize Websites & Articles?
-          </h2>
-          <p className="text-2xl tracking-tighter text-gray-600 mb-12 max-w-2xl mx-auto">
-            {`Quickly extract key insights from web pages and articles in 3 simple steps using TubeAbstract's AI-powered summarizer.`}
-          </p>
-
-          <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">
-            {[
-              {
-                step: "Step 1",
-                title: "Enter Website URL",
-                description: "Copy and paste the URL of the article or web page into TubeAbstract.",
-                icon: "🌐",
-              },
-              {
-                step: "Step 2",
-                title: "Generate Summary",
-                description:
-                  `Click the "Generate Summary" button, and TubeAbstract will analyze and summarize the webpage content.`,
-                icon: "⚡",
-              },
-              {
-                step: "Step 3",
-                title: "Read AI Summary",
-                description: "Get a concise, AI-generated summary and save time reading lengthy articles.",
-                icon: "📖",
-              },
-            ].map((item, index) => (
-              <div
-                key={index}
-                className="bg-white p-6 rounded-lg shadow-md transition duration-300 transform hover:scale-105 hover:shadow-lg"
-              >
-                <div className="text-4xl">{item.icon}</div>
-                <h3 className="text-xl font-semibold text-gray-800 mt-4 mb-2">
-                  {item.step}: {item.title}
-                </h3>
-                <p className="text-gray-600">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-        <section className="px-6 md:px-20 py-16 text-center">
-          <h2 className="text-3xl md:text-8xl tracking-tighter font-bold text-gray-800 mb-8">
-            Who Can Benefit from Website Summarization?
-          </h2>
-          <p className="text-2xl tracking-tighter text-gray-600 mb-12 max-w-2xl mx-auto">
-            Ideal for students, professionals, researchers, and anyone looking to quickly understand lengthy web content.
-          </p>
-
-          <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "For Students",
-                description:
-                  "Summarize educational articles and research papers efficiently to boost your learning.",
-                icon: "🎓",
-              },
-              {
-                title: "For Professionals",
-                description:
-                  "Stay updated with industry news and reports without spending hours reading.",
-                icon: "💼",
-              },
-              {
-                title: "For Researchers",
-                description:
-                  "Quickly extract key findings from academic papers and articles for faster analysis.",
-                icon: "🔬",
-              },
-            ].map((item, index) => (
-              <div
-                key={index}
-                className="p-6 rounded-lg shadow-md border transition duration-300 transform hover:scale-105 hover:shadow-lg"
-              >
-                <div className="text-4xl">{item.icon}</div>
-                <h3 className="text-xl font-semibold text-gray-800 mt-4 mb-2">{item.title}</h3>
-                <p className="text-gray-600">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
+<LOWERWEB/>
         <Footer />
       </div>
     </>

@@ -32,6 +32,7 @@
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "react-markdown": "^9.0.1",
+        "speech-synthesis": "^0.3.2",
         "tailwind-merge": "^2.6.0",
         "tailwindcss-animate": "^1.0.7",
         "youtubei.js": "^12.2.0",
