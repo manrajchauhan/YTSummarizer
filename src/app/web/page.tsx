@@ -1,7 +1,9 @@
 "use client";
-
+import Footer from '@/components/ui/footer'
+import Header from '@/components/ui/header'
 import React from "react";
 import ReactMarkdown from "react-markdown";
+
 import { useChat } from "ai/react";
 import {
   ArrowRight,
@@ -18,12 +20,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { GetVideoDataResponse } from "@/types";
 import { isValidYouTubeUrl } from "@/utils/youtube";
-import Footer from "@/components/ui/footer";
-import Header from "@/components/ui/header";
-import HEROYT from "@/components/ui/hero1";
-import LOWERYT from "@/components/ui/lower1";
 
-export default function Home() {
+export default function SummarizerAPP() {
   const {
     messages,
     input,
@@ -32,7 +30,7 @@ export default function Home() {
     setInput,
     append,
     isLoading,
-  } = useChat({api: "/api/chat"});
+  } = useChat({api: "/api/web-chat"});
   const [isPending, setIsPending] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [videoData, setVideoData] = React.useState<GetVideoDataResponse | null>(
@@ -58,7 +56,8 @@ export default function Home() {
       if (!isValidYouTubeUrl(url))
         throw new Error("Please enter a valid YouTube URL");
 
-      const fetchResult = await fetch(`/api/video?url=${url}`);
+      const fetchResult = await fetch(`/api/website?url=${url}`);
+      console.log(fetchResult);
 
       if (!fetchResult.ok) {
         const body = await fetchResult.json();
@@ -78,7 +77,6 @@ export default function Home() {
         id: crypto.randomUUID(),
       };
 
-      // Trigger the summary generation
       append(message);
     } catch (error) {
       setError(error instanceof Error ? error.message : "An error occurred");
@@ -89,15 +87,34 @@ export default function Home() {
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setInput(e.target.value);
   };
+
   return (
     <>
-    <Header/>
-    <HEROYT/>
-    <div className="bg-gradient-to-b from-background to-muted ">
-      <main className="container mx-auto px-4 py-4 md:py-8 mt-[-200]">
+      <div>
+        <Header />
+        <div
+          className="relative bg-cover bg-center bg-no-repeat px-4 md:px-14 pb-16"
+          style={{
+            backgroundImage: "linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.3)), url('/hero2.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
+          <div className="flex flex-col items-center text-center pt-40 pb-40">
+            <h1 className="text-white text-4xl md:text-8xl font-semibold tracking-tighter drop-shadow-lg">
+              Website Article Summarizer
+            </h1>
+            <p className="text-white text-2xl tracking-tighter md:text-xl mt-4 max-w-2xl drop-shadow-md">
+              Instantly summarize articles, blogs, and web pages with our AI-powered tool, helping you extract key points efficiently.
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-b from-background to-muted ">
+      <main className="container mx-auto px-4 py-4 md:py-8 mt-[-250]">
         <div className="flex flex-col gap-4 md:gap-4 max-w-7xl mx-auto">
           {!videoData ? (
-            <div className="flex flex-col items-center justify-center ">
+            <div className="flex flex-col items-center justify-center mt-10">
               <div
                 className="flex items-center justify-center gap-4 cursor-pointer hover:opacity-80 transition-opacity"
                 onClick={() => {
@@ -126,7 +143,7 @@ export default function Home() {
                       <Button
                         type="submit"
                         disabled={isPending}
-                        className="h-10 px-7 py-8 rounded-[14px] bg-primary hover:bg-primary/90"
+                        className="h-10 px-7 py-8 rounded-[14px] bg-neutral-50 hover:bg-neutral-400 text-black"
                       >
                         {isPending ? (
                           <div className="flex items-center">
@@ -135,7 +152,7 @@ export default function Home() {
                           </div>
                         ) : (
                           <div className="flex items-center">
-                            <span className="hidden sm:inline">Summarize</span>
+                            <span className="hidden sm:inline text-lg">Summarize</span>
                             <ArrowRight className="h-4 w-4 sm:ml-2" />
                           </div>
                         )}
@@ -200,7 +217,7 @@ export default function Home() {
           )}
 
           {videoData && (
-            <div className="">
+            <div className="mt-20">
      <div className="px-4 py-2 sm:px-6 sm:py-4 flex flex-col justify-center h-full sm:h-auto">
      <span className="flex items-center gap-1 sm:gap-2">
        <Youtube className="h-4 w-4 sm:h-8 sm:w-8 text-primary" />{" "}
@@ -239,7 +256,8 @@ export default function Home() {
                   </div>
                 </CardContent>
                 <div className="mt-10">
-                 <h1>Rel</h1>
+                 <h1>Relevant Video</h1>
+
                     </div>
               </div>
 
@@ -321,8 +339,93 @@ export default function Home() {
         </div>
       </main>
     </div>
-    <LOWERYT/>
-    <Footer/>
+
+    <section className="px-6 md:px-20 py-16 bg-gray-100 text-center">
+          <h2 className="text-3xl md:text-8xl font-bold tracking-tighter text-gray-800 mb-8">
+            How to Summarize Websites & Articles?
+          </h2>
+          <p className="text-2xl tracking-tighter text-gray-600 mb-12 max-w-2xl mx-auto">
+            Quickly extract key insights from web pages and articles in 3 simple steps using TubeAbstract's AI-powered summarizer.
+          </p>
+
+          <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">
+            {[
+              {
+                step: "Step 1",
+                title: "Enter Website URL",
+                description: "Copy and paste the URL of the article or web page into TubeAbstract.",
+                icon: "🌐",
+              },
+              {
+                step: "Step 2",
+                title: "Generate Summary",
+                description:
+                  'Click the "Generate Summary" button, and TubeAbstract will analyze and summarize the webpage content.',
+                icon: "⚡",
+              },
+              {
+                step: "Step 3",
+                title: "Read AI Summary",
+                description: "Get a concise, AI-generated summary and save time reading lengthy articles.",
+                icon: "📖",
+              },
+            ].map((item, index) => (
+              <div
+                key={index}
+                className="bg-white p-6 rounded-lg shadow-md transition duration-300 transform hover:scale-105 hover:shadow-lg"
+              >
+                <div className="text-4xl">{item.icon}</div>
+                <h3 className="text-xl font-semibold text-gray-800 mt-4 mb-2">
+                  {item.step}: {item.title}
+                </h3>
+                <p className="text-gray-600">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+        <section className="px-6 md:px-20 py-16 text-center">
+          <h2 className="text-3xl md:text-8xl tracking-tighter font-bold text-gray-800 mb-8">
+            Who Can Benefit from Website Summarization?
+          </h2>
+          <p className="text-2xl tracking-tighter text-gray-600 mb-12 max-w-2xl mx-auto">
+            Ideal for students, professionals, researchers, and anyone looking to quickly understand lengthy web content.
+          </p>
+
+          <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">
+            {[
+              {
+                title: "For Students",
+                description:
+                  "Summarize educational articles and research papers efficiently to boost your learning.",
+                icon: "🎓",
+              },
+              {
+                title: "For Professionals",
+                description:
+                  "Stay updated with industry news and reports without spending hours reading.",
+                icon: "💼",
+              },
+              {
+                title: "For Researchers",
+                description:
+                  "Quickly extract key findings from academic papers and articles for faster analysis.",
+                icon: "🔬",
+              },
+            ].map((item, index) => (
+              <div
+                key={index}
+                className="p-6 rounded-lg shadow-md border transition duration-300 transform hover:scale-105 hover:shadow-lg"
+              >
+                <div className="text-4xl">{item.icon}</div>
+                <h3 className="text-xl font-semibold text-gray-800 mt-4 mb-2">{item.title}</h3>
+                <p className="text-gray-600">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <Footer />
+      </div>
     </>
   );
 }

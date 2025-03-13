@@ -10,3 +10,8 @@ export type ChatMessage = {
     videoId: string;
     summaryUserMessage: ChatMessage;
   }
+
+  export interface GetWebsiteDataResponse {
+    url: string;
+    summaryUserMessage: ChatMessage;
+  }
