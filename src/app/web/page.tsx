@@ -17,12 +17,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { GetVideoDataResponse } from "@/types";
-
 import LOWERWEB from '@/components/ui/lower2';
 import HEROWEB from '@/components/ui/hero2';
 
 export default function SummarizerAPP() {
 
+    const [isSpeaking, setIsSpeaking] = React.useState(false);
+    const speechInstance = useRef<SpeechSynthesisUtterance | null>(null);
   const {
     messages,
     input,
@@ -46,6 +47,14 @@ export default function SummarizerAPP() {
     if (!chatContainer) return;
     chatContainer.scrollTop = chatContainer.scrollHeight;
   }, [messages]);
+
+  React.useEffect(() => {
+    setMessages([]);
+    setVideoData(null);
+    setError(null);
+    window.speechSynthesis.cancel();
+  }, []);
+
 
   async function handleVideoSubmit(formData: FormData) {
     try {
@@ -91,28 +100,57 @@ export default function SummarizerAPP() {
     if (!pdfRef.current) return;
 
     const pdf = new jsPDF("p", "mm", "a4");
-    const marginLeft = 10;
-    const marginTop = 10;
+    const marginLeft = 15;
+    const marginTop = 15;
     const maxWidth = 180;
-    const yPosition = marginTop;
+    let yPosition = marginTop;
 
-    const content = messages.slice(1).map((m) => m.content).join("\n\n");
-
-    const splitText = pdf.splitTextToSize(content, maxWidth);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(16);
+    pdf.text("Website Summary", marginLeft, yPosition);
+    yPosition += 10;
 
     pdf.setFont("helvetica", "normal");
     pdf.setFontSize(12);
-    pdf.text(splitText, marginLeft, yPosition, { maxWidth });
+
+    messages
+      .slice(1)
+      .filter((m) => m.role !== "user")
+      .forEach((m, index) => {
+        const text = `Response ${index + 1}:\n${m.content}`;
+        const splitText = pdf.splitTextToSize(text, maxWidth);
+        pdf.text(splitText, marginLeft, yPosition, { maxWidth });
+        yPosition += splitText.length * 6 + 4;
+      });
 
     pdf.save("web-summary.pdf");
   };
 
+
+
   const speakText = () => {
     const summaryText = messages.slice(1).map((m) => m.content).join(". ");
-    if (summaryText) {
-      const speech = new SpeechSynthesisUtterance(summaryText);
-      window.speechSynthesis.speak(speech);
+    if (!summaryText) return;
+
+    if (isSpeaking) {
+      window.speechSynthesis.pause();
+      setIsSpeaking(false);
+    } else {
+      if (!speechInstance.current) {
+        const speech = new SpeechSynthesisUtterance(summaryText);
+        speech.onend = () => setIsSpeaking(false);
+        speechInstance.current = speech;
+      }
+
+      window.speechSynthesis.speak(speechInstance.current);
+      setIsSpeaking(true);
     }
+  };
+
+  const stopSpeech = () => {
+    window.speechSynthesis.cancel();
+    setIsSpeaking(false);
+    speechInstance.current = null;
   };
 
 
@@ -302,15 +340,23 @@ export default function SummarizerAPP() {
                   </form>
                 </CardContent>
                 <div className="flex justify-between p-4">
-
                     <Button onClick={exportToPDF} className="bg-neutral-950 hover:bg-neutral-800 text-white flex items-center">
                         <Download className="h-4 w-4 mr-2" />
                         Export as PDF
                     </Button>
+                    <div className="flex gap-4">
+
                     <Button onClick={speakText} className="bg-green-600 hover:bg-green-500 text-white flex items-center">
                         <Volume2 className="h-4 w-4 mr-2" />
-                        Read Aloud
+                        {isSpeaking ? "Pause" : "Read Aloud"}
                     </Button>
+
+
+                    <Button onClick={stopSpeech} className="bg-red-600 hover:bg-red-500 text-white flex items-center">
+                        Stop
+                    </Button>
+                    </div>
+
                     </div>
 
 
