@@ -3,7 +3,6 @@ import { streamText } from "ai";
 import { waitUntil } from "@vercel/functions";
 import { langfuseClient, langfuseExporter } from "@/observability/langfuse";
 
-// Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
@@ -16,7 +15,6 @@ export async function POST(req: Request) {
       });
     }
 
-    // Fetch the system prompt from Langfuse
     const prompt = await langfuseClient.getPrompt("summarizer", undefined, {
       type: "chat",
     });
@@ -31,11 +29,11 @@ export async function POST(req: Request) {
 
     console.log("Langfuse Prompt Content:", prompt.prompt[0].content);
 
-    // Call Google Gemini API with structured input
+
     const result = streamText({
-      model: google("gemini-1.5-pro-latest"), // ✅ Using Google Gemini
-      system: prompt.prompt[0].content, // System instructions from Langfuse
-      messages, // User messages
+      model: google("gemini-1.5-pro-latest"),
+      system: prompt.prompt[0].content,
+      messages,
       experimental_telemetry: {
         isEnabled: true,
         functionId: "summarize-video",

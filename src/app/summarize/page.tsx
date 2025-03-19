@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React,{useState,useEffect} from "react";
 import ReactMarkdown from "react-markdown";
 import { useChat } from "ai/react";
+import {YouTubeVideo} from "@/types"
 import {
   ArrowRight,
   ArrowUpRight,
@@ -18,6 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { GetVideoDataResponse } from "@/types";
 import { isValidYouTubeUrl } from "@/utils/youtube";
+import { getRelevantVideosFromVideo } from "@/utils/youtube";
 import Footer from "@/components/ui/footer";
 import Header from "@/components/ui/header";
 import HEROYT from "@/components/ui/hero1";
@@ -78,7 +80,6 @@ export default function Home() {
         id: crypto.randomUUID(),
       };
 
-      // Trigger the summary generation
       append(message);
     } catch (error) {
       setError(error instanceof Error ? error.message : "An error occurred");
@@ -86,6 +87,21 @@ export default function Home() {
       setIsPending(false);
     }
   }
+  const [relatedVideos, setRelatedVideos] = useState<YouTubeVideo[]>([]);
+useEffect(() => {
+    async function fetchRelatedVideos() {
+      if (videoData?.videoId) {
+        try {
+          const videos = await getRelevantVideosFromVideo(`https://www.youtube.com/watch?v=${videoData.videoId}`);
+          setRelatedVideos(videos);
+        } catch (error) {
+          console.error("Error fetching related videos:", error);
+        }
+      }
+    }
+    fetchRelatedVideos();
+  }, [videoData]);
+
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setInput(e.target.value);
   };
@@ -201,14 +217,14 @@ export default function Home() {
 
           {videoData && (
             <div className="mt-10">
-     <div className="px-4 py-2 sm:px-6 sm:py-4 flex flex-col justify-center h-full sm:h-auto">
+     <div className="px-4 py-2 sm:px-6 sm:py-4 flex flex-col justify-center h-full sm:h-auto mt-10 md:mt-0">
      <span className="flex items-center gap-1 sm:gap-2">
        <Youtube className="h-4 w-4 sm:h-8 sm:w-8 text-primary" />{" "}
        <Link
          href={`https://www.youtube.com/watch?v=${videoData.videoId}`}
          target="_blank"
          rel="noreferrer"
-         className="font-semibold text-md line-clamp-2  sm:text-lg overflow-hidden text-ellipsis w-[calc(100vw-6rem)] whitespace-nowrap bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent hover:opacity-80 transition-opacity"
+         className="font-semibold text-md line-clamp-2  sm:text-lg overflow-hidden text-ellipsis w-[calc(100vw-6rem)] whitespace-nowrap bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent hover:opacity-80 transition-opacity text-wrap"
        >
          {videoData.title}
        </Link>
@@ -225,7 +241,7 @@ export default function Home() {
    </div>
    <div className="grid lg:grid-cols-2 gap-2 sm:gap-4 md:gap-6 w-full h-[calc(100vh-7rem)] sm:h-[calc(100vh-14rem)] mt-[2rem] sm:mt-0">
               <div className="animate-in fade-in-0 duration-300">
-                <CardContent className="p-0 hidden sm:block">
+                <CardContent className="p-0 sm:block">
                   <div className="aspect-video bg-black ">
                     <iframe
                       title="YouTube video player"
@@ -238,9 +254,6 @@ export default function Home() {
                     />
                   </div>
                 </CardContent>
-                <div className="mt-10">
-                 <h1>Rel</h1>
-                    </div>
               </div>
 
               <Card className="animate-in fade-in-0 duration-300 h-[calc(100vh-14rem)]">
@@ -317,7 +330,46 @@ export default function Home() {
               </Card>
 </div>
             </div>
+
           )}
+        </div>
+        <div className="flex">
+            {videoData && (
+        <div className="mt-10">
+  <h1 className="text-xl font-bold mb-4">Related Videos</h1>
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    {relatedVideos.length > 0 ? (
+      relatedVideos.map((video) => (
+        <div key={video.videoId} className="flex flex-col gap-2 p-4 transition border rounded-lg hover:shadow-lg ">
+        <a
+          key={video.videoId}
+          href={video.url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+      <iframe
+  title={video.title}
+  width="100%"
+  height="240px"
+  src={`https://www.youtube.com/embed/${video.videoId}`}
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+  loading="lazy"
+  className="rounded-lg"
+/>
+        </a>
+<div>
+<h2 className=" text-lg font-semibold">{video.title}</h2>
+<p className="text-sm text-gray-600">By {video.author}</p>
+</div>
+        </div>
+      ))
+    ) : (
+      <p>Loading related videos...</p>
+    )}
+  </div>
+</div>
+)}
         </div>
       </main>
     </div>

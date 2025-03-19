@@ -9,8 +9,8 @@ export default function Hero() {
         }}
       >
         <div className="pt-[200px] pb-10 items-center text-center">
-          <h1 className="tracking-tight text-4xl md:text-5xl text-white font-medium mb-6">
-            AI-Powered Web & YouTube Summarization
+          <h1 className="tracking-tighter text-4xl md:text-8xl bg-gradient-to-r from-red-800 to-zinc-100 font-bold mb-6 uppercase text-transparent bg-clip-text">
+          Tube Abstract
           </h1>
           <p className="tracking-tight text-white text-xl mb-8">
             Instantly generate concise summaries from web articles and YouTube videos.
