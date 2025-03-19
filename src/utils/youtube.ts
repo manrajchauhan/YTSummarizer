@@ -46,7 +46,7 @@ export async function getVideoMetadata(
   return YoutubeVideoMetadataSchema.parse(data);
 }
 
-const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
+const YOUTUBE_API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
 
 export async function getRelevantVideosFromVideo(url: string): Promise<YouTubeVideo[]> {
     try {
